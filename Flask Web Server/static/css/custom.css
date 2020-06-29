@@ -1,0 +1,187 @@
+.file-upload {
+  background-color: #ffffff;
+  width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.file-upload-btn {
+  width: 100%;
+  margin: 0;
+  color: #fff;
+  background: #a6b9bb;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  border-bottom: 4px solid #79a1b6;
+  transition: all 0.2s ease;
+  outline: none;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.file-upload-btn:hover {
+  background: #015379;
+  color: #ffffff;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.file-upload-btn:active {
+  border: 0;
+  transition: all 0.2s ease;
+}
+
+.file-upload-content {
+  display: none;
+  text-align: center;
+}
+
+.file-upload-input {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.csv-upload-wrap {
+  margin-top: 20px;
+  border: 4px dashed #79a1b6;
+  position: relative;
+}
+
+.csv-dropping,
+.csv-upload-wrap:hover {
+  background-color: #79a1b6;
+  border: 4px dashed #ffffff;
+}
+
+.csv-title-wrap {
+  padding: 0 15px 15px 15px;
+  color: #222;
+}
+
+.drag-text {
+  text-align: center;
+}
+
+.drag-text h3 {
+  font-weight: 100;
+  text-transform: uppercase;
+  color: #015379;
+  padding: 60px 0;
+}
+
+.file-upload-csv {
+  max-height: 200px;
+  max-width: 200px;
+  margin: auto;
+  padding: 20px;
+}
+
+.remove-csv {
+  width: 400px;
+  margin: 0;
+  color: #fff;
+  background: #cd4535;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  border-bottom: 4px solid #b02818;
+  transition: all 0.2s ease;
+  outline: none;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.remove-csv:hover {
+  background: #c13b2a;
+  color: #ffffff;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.remove-csv:active {
+  border: 0;
+  transition: all 0.2s ease;
+}
+
+/*  */
+div#submitDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div#container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#submitButton {
+  outline: none;
+  height: 40px;
+  text-align: center;
+  width: 130px;
+  align-content: center;
+  border-radius: 40px;
+  background: #fff;
+  border: 2px solid #015379;
+  color: #015379;
+  letter-spacing: 1px;
+  text-shadow: 0;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+#submitButton:hover {
+  color: white;
+  background: #015379;
+}
+#submitButton:active {
+  letter-spacing: 2px;
+}
+#submitButton:after {
+  content: "TRAINING";
+}
+
+.onclic {
+  width: 40px;
+  border-color: #bbbbbb;
+  border-width: 3px;
+  font-size: 0;
+  border-left-color: #015379;
+  animation: rotating 2s 0.25s linear infinite;
+}
+.onclic:after {
+  content: "";
+}
+.onclic:hover {
+  color: #015379;
+  background: white;
+}
+
+.validate {
+  font-size: 13px;
+  color: white;
+  background: #015379;
+}
+.validate:after {
+  font-family: "FontAwesome";
+  content: "";
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
