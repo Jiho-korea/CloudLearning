@@ -7,6 +7,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
+import pickle
 
 # 데이터 확인, 분석을 위해 pandas 를 사용
 xy_df = pd.read_csv('iris.csv')
@@ -73,3 +74,8 @@ model = grid_xgb.best_estimator_
 prediction = model.predict(x_test_scaled)
 
 print("테스트 세트 정확도 : {0:.4f}".format(accuracy_score(prediction, y_test)))
+
+print("모델 저장")
+filename = 'result.model'
+
+pickle.dump(model, open(filename, "wb"))
