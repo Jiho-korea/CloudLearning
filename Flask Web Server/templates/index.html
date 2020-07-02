@@ -247,6 +247,7 @@
 
           <!--Grid column-->
           <div class="col-lg-6 col-md-12">
+            
             {% if result %}
               <p class="h5 text-center mb-4" style="font-family: 'Nanum Barun Gothic'">학습 결과</p>
               {% if trainingscore %}
@@ -260,7 +261,7 @@
                 <p class="h5 text-center mb-4" style="font-family: 'Nanum Barun Gothic'">모델 테스트</p>
               <div id="container">
                 <!-- Model 테스트 -->
-                <form method="post" enctype="multipart/form-data" action="http://127.0.0.1:5000/"> 
+                <form method="post" enctype="multipart/form-data" action="http://127.0.0.1:5000/test"> 
                  
                   <div id="testDiv">
                     <input  type='file' name="csv" accept=".csv" />
@@ -269,6 +270,9 @@
                 </form>
                 <!-- Model 테스트 -->
               </div>
+              {% if testSuccess %}
+                <p class="h5 text-center mb-4" style="font-family: 'Nanum Barun Gothic'">테스트 완료</p>
+              {% endif %}
               <br>
               <hr>
               <p class="h5 text-center mb-4" style="font-family: 'Nanum Barun Gothic'">모델 다운로드</p>

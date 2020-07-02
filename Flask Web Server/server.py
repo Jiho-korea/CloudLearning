@@ -1,5 +1,5 @@
 ﻿# -*- coding: utf-8 -*-
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, escape, session
 from werkzeug import secure_filename
 import numpy as np
 import os
@@ -12,78 +12,20 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
 import pickle
+from joblib import dump, load
 
 app = Flask(__name__)
+app.secret_key = 'super secret key'
+app.config['SESSION_TYPE'] = 'filesystem'
 
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
-    if request.method == 'GET':
-        return render_template('index.html')
-    if request.method == 'POST':
-        # 이곳에선 사용자의 샘플 테스트 시 수행할 코드 작성
-
-        # # 파라미터를 전달 받습니다.
-        # mhw = float(request.form['mhw'])
-
-        # # 최저 시급 변수를 선언합니다.
-        # price = 0
-
-        # # 입력된 파라미터를 배열 형태로 준비합니다.
-        # data = ((mhw), (0))
-        # arr = np.array(data, dtype=np.float32)
-
-        # # 입력 값을 토대로 예측 값을 찾아냅니다.
-        # x_data = arr[0:1]
-        # dict = sess.run(hypothesis, feed_dict={X: [x_data]})
-
-        # # 결과 배추 가격을 저장합니다.
-        # price = dict[0]
-
-        new_file = request.files['csv']  # 요청 파라미터 에서 csv파일 구함
-        print("파일이름 : ", new_file.filename, "\n")  # 파일 확인
-        new_file.save("csv/"+secure_filename(new_file.filename))  # csv 파일 저장
-
-        # ############################################################ ############################################################
-
-        # test 용 csv 로드
-        test_df = pd.read_csv("csv/" + new_file.filename)
-        test_df = test_df.dropna(how='all', axis=0)  # 결측치 제거
-
-        x_data = test_df.values  # numpy로 변경
-
-        print(x_data.shape)
-
-        scaler = StandardScaler()
-
-        x_data_scaled = scaler.fit_transform(x_data)
-
-        # print("모델 로드")
-        # filename = 'result.model'
-        # loaded_model = pickle.load(open("model/"+filename, "rb"))
-
-        # prediction = loaded_model.predict(x_data_scaled)
-        # print(prediction)
-
-        # labelEncoder = LabelEncoder()
-        # labelEncoder.classes_ = np.load('model/classes.npy', allow_pickle=True)
-
-        # print(labelEncoder.inverse_transform(prediction))
-
-        # test_df['prediction'] = labelEncoder.inverse_transform(prediction)
-
-        # print(test_df)
-
-        # test_df.to_csv('csv/result_test.csv', sep=',', na_rep='NaN', index=False)
-
-        # ############################################################ ############################################################
-
-        # return render_template('index.html', prediction=prediction)
-        return render_template('index.html')
+    return render_template('index.html')
 
 
 @app.route("/training", methods=['POST'])
-def upload_file():
+def training_model():
     if request.method == 'POST':
         new_file = request.files['csv']  # 요청 파라미터 에서 csv파일 구함
         print("파일이름 : ", new_file.filename, "\n")  # 파일 확인
@@ -124,6 +66,7 @@ def upload_file():
         scaler = StandardScaler()
 
         scaler.fit(x_train)
+        dump(scaler, 'model/std_scaler.bin', compress=True)
 
         x_train_scaled = scaler.transform(x_train)
 
@@ -163,7 +106,67 @@ def upload_file():
 
         pickle.dump(model, open("model/"+filename, "wb"))
 
+        session['result'] = True
+        session['trainingscore'] = str(grid_xgb.best_score_*100)[:6]
+        session['testscore'] = testscore = str(score*100)[:6]
+
         return render_template('index.html', result=True, trainingscore=str(grid_xgb.best_score_*100)[:6], testscore=str(score*100)[:6])
+
+
+@app.route("/test", methods=['POST'])
+def test_model():
+    # 이곳에선 사용자의 샘플 테스트 시 수행할 코드 작성
+    if request.method == 'POST':
+        new_file = request.files['csv']  # 요청 파라미터 에서 csv파일 구함
+        print("파일이름 : ", new_file.filename, "\n")  # 파일 확인
+        new_file.save("csv/"+secure_filename(new_file.filename))  # csv 파일 저장
+
+        # ############################################################ ############################################################
+
+        # test 용 csv 로드
+        test_df = pd.read_csv("csv/" + new_file.filename)
+        test_df = test_df.dropna(how='all', axis=0)  # 결측치 제거
+
+        x_data = test_df.values  # numpy로 변경
+
+        print(x_data.shape)
+
+        scaler = load('model/std_scaler.bin')
+        x_data_scaled = scaler.fit_transform(x_data)
+
+        print("모델 로드\n")
+        filename = 'result.model'
+        loaded_model = pickle.load(open("model/"+filename, "rb"))
+
+        print("테스트 시작")
+        prediction = loaded_model.predict(x_data_scaled)
+        print(prediction)
+
+        labelEncoder = LabelEncoder()
+        labelEncoder.classes_ = np.load('model/classes.npy', allow_pickle=True)
+
+        print(labelEncoder.inverse_transform(prediction))
+
+        test_df['prediction'] = labelEncoder.inverse_transform(prediction)
+
+        print(test_df)
+
+        test_df.to_csv('./csv/result_test.csv', sep=',',
+                       na_rep='NaN', index=False)
+
+#         session['result'] = True
+#         session['trainingscore'] = str(grid_xgb.best_score_*100)[:6]
+#         session['testscore'] = testscore = str(score*100)[:6]
+
+        if 'result' in session:
+            result = '%s' % escape(session['result'])
+        if 'trainingscore' in session:
+            trainingscore = '%s' % escape(session['trainingscore'])
+        if 'testscore' in session:
+            testscore = '%s' % escape(session['testscore'])
+        print("테스트 끝")
+        # ############################################################ ############################################################
+        return render_template('index.html', testSuccess=True, result=True, trainingscore=trainingscore, testscore=testscore)
 
 
 @app.route('/model/<path:filename>', methods=['POST'])
