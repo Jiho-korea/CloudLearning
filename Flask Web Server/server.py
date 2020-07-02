@@ -107,16 +107,15 @@ def upload_file():
 
         print(scores_df[['params', 'mean_test_score',
                          'rank_test_score', 'split0_test_score']])
-
-        print("최적 파라미터 : ", grid_xgb.best_params_)
+        print()
+        print("최적 파라미터 : ", grid_xgb.best_params_, "\n")
         print("최고 정확도 : ", grid_xgb.best_score_)
 
         model = grid_xgb.best_estimator_
 
         prediction = model.predict(x_test_scaled)
         score = accuracy_score(prediction, y_test)
-        print("테스트 세트 정확도 : {0:.4f}".format(score))
-
+        print("테스트 세트 정확도 : {0:.4f}".format(score), "\n")
         print("모델 저장")
         filename = 'result.model'
 
@@ -125,7 +124,7 @@ def upload_file():
         return render_template('index.html', result=True, trainingscore=str(grid_xgb.best_score_*100)[:6], testscore=str(score*100)[:6])
 
 
-@app.route('/<path:filename>', methods=['POST'])
+@app.route('/model/<path:filename>', methods=['POST'])
 def download(filename):
     return send_from_directory(directory='model', filename=filename)
 

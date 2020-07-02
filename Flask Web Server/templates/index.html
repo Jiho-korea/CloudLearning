@@ -42,7 +42,7 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="#" target="_blank">
+      <a class="navbar-brand" href="http://127.0.0.1:5000/" target="_blank">
         <strong class="hangul">CloudLearning</strong> <!--home 버튼 왼쪽 홈페이지 이름 -->
       </a>
 
@@ -58,7 +58,7 @@
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home
+            <a class="nav-link" href="http://127.0.0.1:5000/">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
@@ -104,7 +104,7 @@
             <!-- Content -->
             <div class="text-center white-text mx-5 wow fadeIn">
               <h1 class="mb-4">
-                <strong style="font-family: 'Nanum Barun Gothic'">Learning Everywhere, Use Model</strong>
+                <strong style="font-family: 'Nanum Barun Gothic'">Learning Everywhere, Download Model</strong>
               </h1>
 
               <p>
@@ -202,7 +202,7 @@
       <!--Section: Main features & Quick Start-->
       <section>
 
-        <h3 class="h3 text-center mb-5" style="font-family: 'Nanum Barun Gothic'">CSV파일 업로드</h3>
+        <h3 class="h3 text-center mb-5" style="font-family: 'Nanum Barun Gothic'">모델 학습</h3>
 
         <!--Grid row-->
         <div class="row wow fadeIn">
@@ -216,7 +216,7 @@
                 <form method="post" enctype="multipart/form-data" action="http://127.0.0.1:5000/training">
 
                     <div class="file-upload">
-                      <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Select csv File</button>
+                      <!-- <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Select csv File</button> -->
                     
                       <div class="csv-upload-wrap">
                         <input class="file-upload-input" type='file' name="csv" onchange="readURL(this);" accept=".csv" />
@@ -250,17 +250,32 @@
             {% if result %}
               <p class="h5 text-center mb-4" style="font-family: 'Nanum Barun Gothic'">학습 결과</p>
               {% if trainingscore %}
-                <h5 class="text-center mt-3">학습세트 정확도는 {{ trainingscore }}% 입니다.</h5>
+                <h5 class="text-center mt-3">학습세트 정확도  :  {{ trainingscore }}%</h5>
               {% endif %}
               {% if testscore %}
-                <h5 class="text-center mt-3">테스트세트 정확도는 {{ testscore }}% 입니다.</h5>
+                <h5 class="text-center mt-3">테스트세트 정확도  :  {{ testscore }}% </h5>
               {% endif %}
-              <br><br>
-              <form method="post" action="http://127.0.0.1:5000/result.model">
+              <br>
+              <hr>
+                <p class="h5 text-center mb-4" style="font-family: 'Nanum Barun Gothic'">모델 테스트</p>
+              <div id="container">
+                <!-- Model 테스트 -->
+                <form method="post" enctype="multipart/form-data" action="http://127.0.0.1:5000/"> 
+                 
+                  <div id="testDiv">
+                    <input  type='file' name="csv" accept=".csv" />
+                    <button id="testButton" type="submit" ></button>
+                  </div>
+                </form>
+                <!-- Model 테스트 -->
+              </div>
+              <br>
+              <hr>
+              <p class="h5 text-center mb-4" style="font-family: 'Nanum Barun Gothic'">모델 다운로드</p>
+              <form method="post" action="http://127.0.0.1:5000/model/result.model">
                 <div id="downloadDiv">
                   <button id="downloadButton" type="submit"></button>
                 </div>
-               
               </form>
             {% endif %}
         
@@ -302,19 +317,20 @@
 
   <!-- SCRIPTS -->
   <!-- JQuery -->
-  <script type="text/javascript" src="{{url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script>
+  <!-- <script type="text/javascript" src="{{url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script> -->
   <!-- Bootstrap tooltips -->
+  <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/popper.min.js')}}"></script>
   <!-- Bootstrap core JavaScript -->
   <script type="text/javascript" src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="{{url_for('static', filename='js/mdb.min.js')}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/custom.js')}}"></script>
-  <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  
   <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
+    // new WOW().init();
   </script>
   
 </body>

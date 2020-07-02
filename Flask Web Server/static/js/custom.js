@@ -29,6 +29,8 @@ $(".csv-upload-wrap").bind("dragleave", function () {
 });
 
 //
+
+//
 $(function () {
   $("#submitButton").click(function () {
     $("#submitButton").addClass("onclic", 250, validate);
@@ -45,4 +47,44 @@ $(function () {
       $("#submitButton").removeClass("validate");
     }, 1250);
   }
+});
+
+//
+
+function testReadURL(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      $(".test-csv-upload-wrap").hide();
+
+      $(".test-file-upload-content").show();
+
+      $(".test-csv-title").html(input.files[0].name);
+    };
+
+    reader.readAsDataURL(input.files[0]);
+  } else {
+    testRemoveUpload();
+  }
+}
+
+document.getElementsByClassName(".test-file-upload-input").onchange = function (
+  e
+) {
+  testReadURL(e.srcElement.files[0]);
+};
+
+function testRemoveUpload() {
+  $(".test-file-upload-input").replaceWith(
+    $(".test-file-upload-input").clone()
+  );
+  $(".test-file-upload-content").hide();
+  $(".test-csv-upload-wrap").show();
+}
+$(".test-csv-upload-wrap").bind("dragover", function () {
+  $(".test-csv-upload-wrap").addClass("test-csv-dropping");
+});
+$(".test-csv-upload-wrap").bind("dragleave", function () {
+  $(".test-csv-upload-wrap").removeClass("test-csv-dropping");
 });
