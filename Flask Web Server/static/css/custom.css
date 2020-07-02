@@ -151,13 +151,13 @@ div#container {
   content: "TRAINING";
 }
 
-div#downloadDiv {
+div#downloadModelDiv {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-#downloadButton {
+#downloadModelButton {
   outline: none;
   height: 40px;
   text-align: center;
@@ -174,34 +174,66 @@ div#downloadDiv {
   cursor: pointer;
   transition: all 0.25s ease;
 }
-#downloadButton:hover {
+#downloadModelButton:hover {
   color: white;
   background: #1ecd97;
 }
-#downloadButton:active {
+#downloadModelButton:active {
   letter-spacing: 2px;
 }
-#downloadButton:after {
-  content: "DOWNLOAD";
+#downloadModelButton:after {
+  content: "DOWNLOAD MODEL";
 }
 
-.onclic {
-  width: 40px;
-  border-color: #bbbbbb;
-  border-width: 3px;
-  font-size: 0;
-  border-left-color: #015379;
+/*  */
+
+div#downloadTestDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#downloadTestButton {
+  outline: none;
+  height: 40px;
+  text-align: center;
+  width: 130px;
+  align-content: center;
+  border-radius: 40px;
+  background: #fff;
+  border: 2px solid #1ecd97;
+  color: #1ecd97;
+  letter-spacing: 1px;
+  text-shadow: 0;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+#downloadTestButton:hover {
+  color: white;
+  background: #1ecd97;
+}
+#downloadTestButton:active {
+  letter-spacing: 2px;
+}
+#downloadTestButton:after {
+  content: "DOWNLOAD RESULT";
+}
+
+/*  */
+.onclick {
   animation: rotating 2s 0.25s linear infinite;
 }
-.onclic:after {
+/* .onclick:after {
   content: "";
-}
-.onclic:hover {
+} */
+/* .onclick:hover {
   color: #015379;
   background: white;
-}
+} */
 
-.validate {
+/* .validate {
   font-size: 13px;
   color: white;
   background: #015379;
@@ -209,7 +241,7 @@ div#downloadDiv {
 .validate:after {
   font-family: "FontAwesome";
   content: "";
-}
+} */
 
 @keyframes rotating {
   from {

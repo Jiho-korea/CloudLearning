@@ -31,22 +31,73 @@ $(".csv-upload-wrap").bind("dragleave", function () {
 //
 
 //
+
 $(function () {
+  // $("#submitButton").bind("click", function () {
+  //   var fileVal = $(".file-upload-input").val();
+  //   if (fileVal == "") {
+  //     alert("CSV 파일을 선택해 주세요.");
+  //     return false;
+  //   }
+  // });
+
   $("#submitButton").click(function () {
-    $("#submitButton").addClass("onclic", 250, validate);
+    var fileVal = $(".file-upload-input").val();
+    if (fileVal == "") {
+      alert("CSV 파일을 선택해 주세요.");
+      return false;
+    }
+    $(this).addClass("onclick", 250, validate);
+    $(this).css("width", "40px");
+    $(this).css("border-color", "#bbbbbb");
+    $(this).css("border-width", "3px");
+    $(this).css("font-size", "0");
+    $(this).css("border-left-color", "#015379");
+  });
+
+  $("#submitButton").hover(function () {
+    $(this).css("color", "#015379");
+    $(this).css("background", "white");
+  });
+
+  $("#submitButton").after(function () {
+    $(this).css("content", "");
   });
 
   function validate() {
-    setTimeout(function () {
-      $("#submitButton").removeClass("onclic");
-      $("#submitButton").addClass("validate", 450, callback);
-    }, 2250);
+    // setTimeout(function () {
+    //   $("#submitButton").removeClass("onclick");
+    //   $("#submitButton").addClass("validate", 450, callback);
+    // }, 10000);
   }
   function callback() {
-    setTimeout(function () {
-      $("#submitButton").removeClass("validate");
-    }, 1250);
+    // setTimeout(function () {
+    //   $("#submitButton").removeClass("validate");
+    // }, 10000);
   }
+
+  $("#testButton").click(function () {
+    var testFileVal = $(".test-file-input").val();
+    if (testFileVal == "") {
+      alert("CSV 파일을 선택해 주세요.");
+      return false;
+    }
+    $(this).addClass("onclick", 250, validate);
+    $(this).css("width", "40px");
+    $(this).css("border-color", "#bbbbbb");
+    $(this).css("border-width", "3px");
+    $(this).css("font-size", "0");
+    $(this).css("border-left-color", "#1ecd97");
+  });
+
+  $("#testButton").hover(function () {
+    $(this).css("color", "#1ecd97");
+    $(this).css("background", "white");
+  });
+
+  $("#testButton").after(function () {
+    $(this).css("content", "");
+  });
 });
 
 //
@@ -69,11 +120,11 @@ function testReadURL(input) {
   }
 }
 
-document.getElementsByClassName(".test-file-upload-input").onchange = function (
-  e
-) {
-  testReadURL(e.srcElement.files[0]);
-};
+// document.getElementsByClassName(".test-file-upload-input").onchange = function (
+//   e
+// ) {
+//   testReadURL(e.srcElement.files[0]);
+// };
 
 function testRemoveUpload() {
   $(".test-file-upload-input").replaceWith(

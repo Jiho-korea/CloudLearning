@@ -7,7 +7,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>CloudLearning</title>
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
   <!-- Bootstrap core CSS -->
   <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
   <!-- Material Design Bootstrap -->
@@ -42,7 +42,7 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="http://127.0.0.1:5000/" target="_blank">
+      <a class="navbar-brand" href="http://127.0.0.1:5000/">
         <strong class="hangul">CloudLearning</strong> <!--home 버튼 왼쪽 홈페이지 이름 -->
       </a>
 
@@ -67,9 +67,8 @@
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
           <li class="nav-item">
-            <a href="https://github.com/Jiho-korea/GoldOlivePrice" class="nav-link border border-light rounded"
-              target="_blank">
-              <i class="fa fa-github mr-2"></i>GitHub
+            <a href="http://127.0.0.1:5000/logout" class="nav-link border border-light rounded">
+              Logout
             </a>
           </li>
         </ul>
@@ -215,7 +214,8 @@
               <div id="container">
                 <form method="post" enctype="multipart/form-data" action="http://127.0.0.1:5000/training">
 
-                    <div class="file-upload">
+                    <div id="divToScroll" class="file-upload">
+                      
                       <!-- <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Select csv File</button> -->
                     
                       <div class="csv-upload-wrap">
@@ -232,7 +232,7 @@
                       </div>
                     </div>
                     <div id="submitDiv">
-                    <button id="submitButton" type="submit" ></button>
+                    <button id="submitButton" type="submit"></button>
                     </div>
                 </form>
               
@@ -264,21 +264,27 @@
                 <form method="post" enctype="multipart/form-data" action="http://127.0.0.1:5000/test"> 
                  
                   <div id="testDiv">
-                    <input  type='file' name="csv" accept=".csv" />
+                    <input class="test-file-input" type='file' name="csv" accept=".csv" />
                     <button id="testButton" type="submit" ></button>
                   </div>
                 </form>
                 <!-- Model 테스트 -->
               </div>
               {% if testSuccess %}
+                <br>
                 <p class="h5 text-center mb-4" style="font-family: 'Nanum Barun Gothic'">테스트 완료</p>
+                <form method="post" action="http://127.0.0.1:5000/csv/result_test.csv">
+                  <div id="downloadTestDiv">
+                    <button id="downloadTestButton" type="submit"></button>
+                  </div>
+                </form>
               {% endif %}
               <br>
               <hr>
               <p class="h5 text-center mb-4" style="font-family: 'Nanum Barun Gothic'">모델 다운로드</p>
               <form method="post" action="http://127.0.0.1:5000/model/result.model">
-                <div id="downloadDiv">
-                  <button id="downloadButton" type="submit"></button>
+                <div id="downloadModelDiv">
+                  <button id="downloadModelButton" type="submit"></button>
                 </div>
               </form>
             {% endif %}
@@ -331,6 +337,13 @@
   <script type="text/javascript" src="{{url_for('static', filename='js/mdb.min.js')}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/custom.js')}}"></script>
   
+  {% if scroll %}
+    <script>
+      $(function() {
+       $("html, body").animate({ scrollTop: $("#{{ scroll }}").offset().top }, 10);
+      });
+    </script>
+  {% endif %}
   <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization

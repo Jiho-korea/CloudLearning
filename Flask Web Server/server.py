@@ -21,6 +21,12 @@ app.config['SESSION_TYPE'] = 'filesystem'
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
+    if 'result' in session:
+        result = '%s' % escape(session['result'])
+        trainingscore = '%s' % escape(session['trainingscore'])
+        testscore = '%s' % escape(session['testscore'])
+        return render_template('index.html', result=result, trainingscore=trainingscore, testscore=testscore)
+
     return render_template('index.html')
 
 
@@ -110,7 +116,7 @@ def training_model():
         session['trainingscore'] = str(grid_xgb.best_score_*100)[:6]
         session['testscore'] = testscore = str(score*100)[:6]
 
-        return render_template('index.html', result=True, trainingscore=str(grid_xgb.best_score_*100)[:6], testscore=str(score*100)[:6])
+        return render_template('index.html', result=True, trainingscore=str(grid_xgb.best_score_*100)[:6], testscore=str(score*100)[:6], scroll='divToScroll')
 
 
 @app.route("/test", methods=['POST'])
@@ -154,10 +160,6 @@ def test_model():
         test_df.to_csv('./csv/result_test.csv', sep=',',
                        na_rep='NaN', index=False)
 
-#         session['result'] = True
-#         session['trainingscore'] = str(grid_xgb.best_score_*100)[:6]
-#         session['testscore'] = testscore = str(score*100)[:6]
-
         if 'result' in session:
             result = '%s' % escape(session['result'])
         if 'trainingscore' in session:
@@ -166,12 +168,25 @@ def test_model():
             testscore = '%s' % escape(session['testscore'])
         print("테스트 끝")
         # ############################################################ ############################################################
-        return render_template('index.html', testSuccess=True, result=True, trainingscore=trainingscore, testscore=testscore)
+        return render_template('index.html', testSuccess=True, result=True, trainingscore=trainingscore, testscore=testscore, scroll='divToScroll')
 
 
 @app.route('/model/<path:filename>', methods=['POST'])
-def download(filename):
+def downloadModel(filename):
     return send_from_directory(directory='model', filename=filename)
+
+
+@app.route('/csv/<path:filename>', methods=['POST'])
+def downloadCsv(filename):
+    return send_from_directory(directory='csv', filename=filename)
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.pop('result', None)
+    session.pop('trainingscore', None)
+    session.pop('testscore', None)
+    return render_template('index.html')
 
 
 if __name__ == '__main__':
