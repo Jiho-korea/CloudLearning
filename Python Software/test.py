@@ -1,3 +1,5 @@
+# 저장된 model 을 load 하여 테스트하는 py파일
+
 import numpy as np
 import pandas as pd
 import time as time

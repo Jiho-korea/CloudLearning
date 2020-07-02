@@ -1,5 +1,5 @@
 ﻿# -*- coding: utf-8 -*-
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 from werkzeug import secure_filename
 import numpy as np
 import os
@@ -11,22 +11,9 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
-
+import pickle
 
 app = Flask(__name__)
-
-
-# # 저장된 모델을 불러오는 객체를 선언합니다.
-# saver = tf.train.Saver()
-# model = tf.global_variables_initializer()
-
-# # 세션 객체를 생성합니다.
-# sess = tf.Session()
-# sess.run(model)
-
-# # 저장된 모델을 세션에 적용합니다.
-# save_path = "./model/saved.cpkt"
-# saver.restore(sess, save_path)
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -60,7 +47,7 @@ def index():
 def upload_file():
     if request.method == 'POST':
         new_file = request.files['csv']  # 요청 파라미터 에서 csv파일 구함
-        print("파일이름 : ", new_file.filename)  # 파일 확인
+        print("파일이름 : ", new_file.filename, "\n")  # 파일 확인
         new_file.save(secure_filename(new_file.filename))  # csv 파일 저장
 
         #####################################################################
@@ -89,7 +76,8 @@ def upload_file():
             x_data, y_data, test_size=0.2, stratify=y_data)  # 전체 데이터중 30%
 
         print("학습용 ", x_train.shape, "\t", y_train.shape)  # 학습용 피쳐, 레이블 데이터
-        print("테스트용 ", x_test.shape, "\t", y_test.shape)  # 테스트용 피쳐, 레이블 데이터
+        print("테스트용 ", x_test.shape, "\t",
+              y_test.shape, "\n")  # 테스트용 피쳐, 레이블 데이터
 
         scaler = StandardScaler()
 
@@ -108,10 +96,10 @@ def upload_file():
 
         grid_xgb = GridSearchCV(xgb, param_grid=parameters, cv=3, refit=True)
 
-        print("학습 시작")
+        print("학습 시작.....")
         start = time.time()  # 시작 시간 저장
         grid_xgb.fit(x_train_scaled, y_train.reshape(-1))
-        print("학습 종료")
+        print("학습 종료", "\n")
         print("학습 시간 : ", str(time.time() - start)
               [:6], "초", sep="")  # 현재시각 - 시작시간 = 실행 시간
 
@@ -129,7 +117,17 @@ def upload_file():
         score = accuracy_score(prediction, y_test)
         print("테스트 세트 정확도 : {0:.4f}".format(score))
 
-        return render_template('index.html', trainingscore=str(grid_xgb.best_score_*100)[:6], testscore=str(score*100)[:6])
+        print("모델 저장")
+        filename = 'result.model'
+
+        pickle.dump(model, open("model/"+filename, "wb"))
+
+        return render_template('index.html', result=True, trainingscore=str(grid_xgb.best_score_*100)[:6], testscore=str(score*100)[:6])
+
+
+@app.route('/<path:filename>', methods=['POST'])
+def download(filename):
+    return send_from_directory(directory='model', filename=filename)
 
 
 if __name__ == '__main__':
