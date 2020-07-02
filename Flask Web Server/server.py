@@ -39,8 +39,11 @@ def index():
 
         # # 결과 배추 가격을 저장합니다.
         # price = dict[0]
+        new_file = request.files['csv']  # 요청 파라미터 에서 csv파일 구함
+        print("파일이름 : ", new_file.filename, "\n")  # 파일 확인
+        new_file.save("csv/"+secure_filename(new_file.filename))  # csv 파일 저장
+
         return render_template('index.html', prediction=prediction)
-        # return render_template('index.html', prediction=prediction)
 
 
 @app.route("/training", methods=['POST'])
@@ -48,7 +51,7 @@ def upload_file():
     if request.method == 'POST':
         new_file = request.files['csv']  # 요청 파라미터 에서 csv파일 구함
         print("파일이름 : ", new_file.filename, "\n")  # 파일 확인
-        new_file.save(secure_filename(new_file.filename))  # csv 파일 저장
+        new_file.save("csv/"+secure_filename(new_file.filename))  # csv 파일 저장
 
         #####################################################################
 

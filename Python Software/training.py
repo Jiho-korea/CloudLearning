@@ -21,6 +21,8 @@ labelEncoder = LabelEncoder()
 xy_df.iloc[:, [-1]
            ] = labelEncoder.fit_transform(xy_df.iloc[:, [-1]].values.reshape(-1))
 
+np.save('classes.npy', labelEncoder.classes_)
+
 y_data = xy_df.iloc[:, -1].values.reshape(-1, 1)  # 레이블 데이터(종류)를 numpy로 추출
 
 x_data = xy_df.iloc[:, :-1].values  # 피쳐데이터를 numpy로 추출
