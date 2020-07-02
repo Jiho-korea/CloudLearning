@@ -42,7 +42,7 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="http://127.0.0.1:5000/">
+      <a class="navbar-brand" href="/">
         <strong class="hangul">CloudLearning</strong> <!--home 버튼 왼쪽 홈페이지 이름 -->
       </a>
 
@@ -58,7 +58,7 @@
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="http://127.0.0.1:5000/">Home
+            <a class="nav-link" href="/">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
@@ -67,7 +67,7 @@
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
           <li class="nav-item">
-            <a href="http://127.0.0.1:5000/logout" class="nav-link border border-light rounded">
+            <a href="/logout" class="nav-link border border-light rounded">
               Logout
             </a>
           </li>
@@ -212,7 +212,7 @@
             <!-- Default input -->
             <div class="form-group" >
               <div id="container">
-                <form method="post" enctype="multipart/form-data" action="http://127.0.0.1:5000/training">
+                <form method="post" enctype="multipart/form-data" action="/training">
 
                     <div id="divToScroll" class="file-upload">
                       
@@ -261,7 +261,7 @@
                 <p class="h5 text-center mb-4" style="font-family: 'Nanum Barun Gothic'">모델 테스트</p>
               <div id="container">
                 <!-- Model 테스트 -->
-                <form method="post" enctype="multipart/form-data" action="http://127.0.0.1:5000/test"> 
+                <form method="post" enctype="multipart/form-data" action="/test"> 
                  
                   <div id="testDiv">
                     <input class="test-file-input" type='file' name="csv" accept=".csv" />
@@ -273,7 +273,7 @@
               {% if testSuccess %}
                 <br>
                 <p class="h5 text-center mb-4" style="font-family: 'Nanum Barun Gothic'">테스트 완료</p>
-                <form method="post" action="http://127.0.0.1:5000/csv/result_test.csv">
+                <form method="post" action="/csv/result_test.csv">
                   <div id="downloadTestDiv">
                     <button id="downloadTestButton" type="submit"></button>
                   </div>
@@ -282,7 +282,7 @@
               <br>
               <hr>
               <p class="h5 text-center mb-4" style="font-family: 'Nanum Barun Gothic'">모델 다운로드</p>
-              <form method="post" action="http://127.0.0.1:5000/model/result.model">
+              <form method="post" action="/model/result.model">
                 <div id="downloadModelDiv">
                   <button id="downloadModelButton" type="submit"></button>
                 </div>

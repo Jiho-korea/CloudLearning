@@ -1,6 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 from flask import Flask, render_template, request, send_from_directory, escape, session
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 import numpy as np
 import os
 import pandas as pd
@@ -13,8 +13,10 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
 import pickle
 from joblib import dump, load
+from flask_cors import CORS
+import ssl
 
-app = Flask(__name__)
+app = Flask(__name__,  static_url_path='')
 app.secret_key = 'super secret key'
 app.config['SESSION_TYPE'] = 'filesystem'
 
@@ -144,30 +146,32 @@ def test_model():
         filename = 'result.model'
         loaded_model = pickle.load(open("model/"+filename, "rb"))
 
-        print("테스트 시작")
+        print("테스트 시작\n")
         prediction = loaded_model.predict(x_data_scaled)
-        print(prediction)
+        print("테스트 끝\n")
+        #print(prediction)
 
         labelEncoder = LabelEncoder()
         labelEncoder.classes_ = np.load('model/classes.npy', allow_pickle=True)
 
-        print(labelEncoder.inverse_transform(prediction))
+        #print(labelEncoder.inverse_transform(prediction))
+
 
         test_df['prediction'] = labelEncoder.inverse_transform(prediction)
 
-        print(test_df)
+        print("DataFrame 완성\n")
 
         test_df.to_csv('./csv/result_test.csv', sep=',',
                        na_rep='NaN', index=False)
-
+        print("csv 파일 생성\n")
         if 'result' in session:
             result = '%s' % escape(session['result'])
         if 'trainingscore' in session:
             trainingscore = '%s' % escape(session['trainingscore'])
         if 'testscore' in session:
             testscore = '%s' % escape(session['testscore'])
-        print("테스트 끝")
-        # ############################################################ ############################################################
+       
+        
         return render_template('index.html', testSuccess=True, result=True, trainingscore=trainingscore, testscore=testscore, scroll='divToScroll')
 
 
@@ -190,4 +194,8 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+    ssl_context.load_cert_chain(certfile='private.crt', keyfile='private.key')
+    
+    app.debug = True
+    app.run(host='0.0.0.0', ssl_context=ssl_context)
