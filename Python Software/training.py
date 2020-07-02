@@ -8,9 +8,10 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
 import pickle
+from sklearn.externals.joblib import dump, load
 
 # 데이터 확인, 분석을 위해 pandas 를 사용
-xy_df = pd.read_csv('iris.csv')
+xy_df = pd.read_csv('csv/iris.csv')
 xy_df = xy_df.dropna(how='all', axis=0)  # 결측치 제거
 
 
@@ -21,7 +22,7 @@ labelEncoder = LabelEncoder()
 xy_df.iloc[:, [-1]
            ] = labelEncoder.fit_transform(xy_df.iloc[:, [-1]].values.reshape(-1))
 
-np.save('classes.npy', labelEncoder.classes_)
+np.save('model/classes.npy', labelEncoder.classes_)
 
 y_data = xy_df.iloc[:, -1].values.reshape(-1, 1)  # 레이블 데이터(종류)를 numpy로 추출
 
@@ -41,6 +42,7 @@ print("테스트용 ", x_test.shape, "\t", y_test.shape)  # 테스트용 피쳐,
 scaler = StandardScaler()
 
 scaler.fit(x_train)
+dump(scaler, 'model/std_scaler.bin', compress=True)
 
 x_train_scaled = scaler.transform(x_train)
 
@@ -80,4 +82,4 @@ print("테스트 세트 정확도 : {0:.4f}".format(accuracy_score(prediction, y
 print("모델 저장")
 filename = 'result.model'
 
-pickle.dump(model, open(filename, "wb"))
+pickle.dump(model, open("model/"+filename, "wb"))

@@ -39,11 +39,47 @@ def index():
 
         # # 결과 배추 가격을 저장합니다.
         # price = dict[0]
+
         new_file = request.files['csv']  # 요청 파라미터 에서 csv파일 구함
         print("파일이름 : ", new_file.filename, "\n")  # 파일 확인
         new_file.save("csv/"+secure_filename(new_file.filename))  # csv 파일 저장
 
-        return render_template('index.html', prediction=prediction)
+        # ############################################################ ############################################################
+
+        # test 용 csv 로드
+        test_df = pd.read_csv("csv/" + new_file.filename)
+        test_df = test_df.dropna(how='all', axis=0)  # 결측치 제거
+
+        x_data = test_df.values  # numpy로 변경
+
+        print(x_data.shape)
+
+        scaler = StandardScaler()
+
+        x_data_scaled = scaler.fit_transform(x_data)
+
+        # print("모델 로드")
+        # filename = 'result.model'
+        # loaded_model = pickle.load(open("model/"+filename, "rb"))
+
+        # prediction = loaded_model.predict(x_data_scaled)
+        # print(prediction)
+
+        # labelEncoder = LabelEncoder()
+        # labelEncoder.classes_ = np.load('model/classes.npy', allow_pickle=True)
+
+        # print(labelEncoder.inverse_transform(prediction))
+
+        # test_df['prediction'] = labelEncoder.inverse_transform(prediction)
+
+        # print(test_df)
+
+        # test_df.to_csv('csv/result_test.csv', sep=',', na_rep='NaN', index=False)
+
+        # ############################################################ ############################################################
+
+        # return render_template('index.html', prediction=prediction)
+        return render_template('index.html')
 
 
 @app.route("/training", methods=['POST'])
@@ -56,7 +92,7 @@ def upload_file():
         #####################################################################
 
         # 데이터 확인, 분석을 위해 pandas 를 사용
-        xy_df = pd.read_csv(new_file.filename)
+        xy_df = pd.read_csv("csv/" + new_file.filename)
         xy_df = xy_df.dropna(how='all', axis=0)  # 결측치 제거
 
         # 레이블 인코딩 과정 (문자열(종류)을 대응하는 정수로 변경)
@@ -65,6 +101,9 @@ def upload_file():
         # 레이블 인코딩(문자열 레이블->정수)
         xy_df.iloc[:, [-1]
                    ] = labelEncoder.fit_transform(xy_df.iloc[:, [-1]].values.reshape(-1))
+
+        # fit 한 class 저장
+        np.save('model/classes.npy', labelEncoder.classes_)
 
         # 레이블 데이터(종류)를 numpy로 추출
         y_data = xy_df.iloc[:, -1].values.reshape(-1, 1)
