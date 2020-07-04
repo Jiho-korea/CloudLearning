@@ -5,6 +5,7 @@ import numpy as np
 import os
 import pandas as pd
 import time as time
+import datetime
 from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -27,7 +28,16 @@ def index():
         result = '%s' % escape(session['result'])
         trainingscore = '%s' % escape(session['trainingscore'])
         testscore = '%s' % escape(session['testscore'])
-        return render_template('index.html', result=result, trainingscore=trainingscore, testscore=testscore)
+        times = '%s' % escape(session['times'])
+
+        content = {
+            'result': result,
+            'trainingscore': trainingscore,
+            'testscore': testscore,
+            'times': times
+        }
+
+        return render_template('index.html', **content)
 
     return render_template('index.html')
 
@@ -93,8 +103,12 @@ def training_model():
         start = time.time()  # 시작 시간 저장
         grid_xgb.fit(x_train_scaled, y_train.reshape(-1))
         print("학습 종료", "\n")
-        print("학습 시간 : ", str(time.time() - start)
-              [:6], "초", sep="")  # 현재시각 - 시작시간 = 실행 시간
+        sec = time.time() - start
+        times = str(datetime.timedelta(seconds=sec)).split(".")
+        times = times[0]
+        # print("학습 시간 : ", str(time.time() - start)
+        #       [:6], "초", sep="")  # 현재시각 - 시작시간 = 실행 시간
+        print("학습 시간 : ", times)
 
         scores_df = pd.DataFrame(grid_xgb.cv_results_)
 
@@ -114,11 +128,21 @@ def training_model():
 
         pickle.dump(model, open("model/"+filename, "wb"))
 
+        content = {
+            'result': True,
+            'trainingscore': str(grid_xgb.best_score_*100)[:6],
+            'testscore': str(score*100)[:6],
+            'scroll': 'divToScroll',
+            'times': times
+        }
+
         session['result'] = True
         session['trainingscore'] = str(grid_xgb.best_score_*100)[:6]
         session['testscore'] = testscore = str(score*100)[:6]
+        session['times'] = times
 
-        return render_template('index.html', result=True, trainingscore=str(grid_xgb.best_score_*100)[:6], testscore=str(score*100)[:6], scroll='divToScroll')
+        # return render_template('index.html', result=True, trainingscore=str(grid_xgb.best_score_*100)[:6], testscore=str(score*100)[:6], scroll='divToScroll', times=times)
+        return render_template('index.html', **content)
 
 
 @app.route("/test", methods=['POST'])
@@ -149,13 +173,12 @@ def test_model():
         print("테스트 시작\n")
         prediction = loaded_model.predict(x_data_scaled)
         print("테스트 끝\n")
-        #print(prediction)
+        # print(prediction)
 
         labelEncoder = LabelEncoder()
         labelEncoder.classes_ = np.load('model/classes.npy', allow_pickle=True)
 
-        #print(labelEncoder.inverse_transform(prediction))
-
+        # print(labelEncoder.inverse_transform(prediction))
 
         test_df['prediction'] = labelEncoder.inverse_transform(prediction)
 
@@ -170,9 +193,20 @@ def test_model():
             trainingscore = '%s' % escape(session['trainingscore'])
         if 'testscore' in session:
             testscore = '%s' % escape(session['testscore'])
-       
-        
-        return render_template('index.html', testSuccess=True, result=True, trainingscore=trainingscore, testscore=testscore, scroll='divToScroll')
+        if 'times' in session:
+            times = '%s' % escape(session['times'])
+
+        content = {
+            'testSuccess': True,
+            'result': True,
+            'trainingscore': trainingscore,
+            'testscore': testscore,
+            'scroll': 'divToScroll',
+            'times': times
+        }
+
+        # return render_template('index.html', testSuccess=True, result=True, trainingscore=trainingscore, testscore=testscore, scroll='divToScroll')
+        return render_template('index.html', **content)
 
 
 @app.route('/model/<path:filename>', methods=['POST'])
@@ -190,12 +224,14 @@ def logout():
     session.pop('result', None)
     session.pop('trainingscore', None)
     session.pop('testscore', None)
+    session.pop('times', None)
     return render_template('index.html')
 
 
 if __name__ == '__main__':
     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-    ssl_context.load_cert_chain(certfile='private.crt', keyfile='private.key')
-    
+    ssl_context.load_cert_chain(
+        certfile='key/private.crt', keyfile='key/private.key')
+
     app.debug = True
     app.run(host='0.0.0.0', ssl_context=ssl_context)
