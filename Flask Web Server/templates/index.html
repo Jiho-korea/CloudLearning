@@ -250,6 +250,9 @@
             
             {% if result %}
               <p class="h5 text-center mb-4" style="font-family: 'Nanum Barun Gothic'">학습 결과</p>
+              {% if times %}
+                <h5 class="text-center mt-3">학습시간  :  {{ times }} </h5>
+              {% endif %}
               {% if trainingscore %}
                 <h5 class="text-center mt-3">학습세트 정확도  :  {{ trainingscore }}%</h5>
               {% endif %}
