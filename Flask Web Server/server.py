@@ -19,6 +19,7 @@ import ssl
 import psutil
 import pyrebase
 import threading
+import zipfile
 
 app = Flask(__name__,  static_url_path='')
 app.secret_key = 'super secret key'
@@ -254,6 +255,11 @@ def test_model():
 
 @app.route('/model/<path:filename>', methods=['POST'])
 def downloadModel(filename):
+    zip = zipfile.ZipFile("model/model.zip", "w")
+    zip.write("model/result.model", compress_type=zipfile.ZIP_DEFLATED)
+    zip.write("model/classes.npy", compress_type=zipfile.ZIP_DEFLATED)
+    zip.write("model/std_scaler.bin", compress_type=zipfile.ZIP_DEFLATED)
+    zip.close()
     return send_from_directory(directory='model', filename=filename)
 
 
