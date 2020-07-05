@@ -16,14 +16,56 @@ import pickle
 from joblib import dump, load
 from flask_cors import CORS
 import ssl
+import psutil
+import pyrebase
+import threading
 
 app = Flask(__name__,  static_url_path='')
 app.secret_key = 'super secret key'
 app.config['SESSION_TYPE'] = 'filesystem'
 
 
+thread = None
+
+config = {
+    "apiKey": "AIzaSyDU9epT6v6ByF1ETbO7Wb8bfnjl03jDzeQ",
+    "authDomain": "cloudlearning-c6b5b.firebaseapp.com",
+    "databaseURL": "https://cloudlearning-c6b5b.firebaseio.com",
+    "projectId": "cloudlearning-c6b5b",
+    "storageBucket": "cloudlearning-c6b5b.appspot.com",
+    "messagingSenderId": "886108415440",
+    "appId": "1:886108415440:web:c68e7a51da2ff23a97c5d5",
+    "measurementId": "G-7CPKRDBZQ2",
+}
+
+firebase = pyrebase.initialize_app(config)
+
+db = firebase.database()
+
+
+# 스레드가 실행할 firebase 에 CPU, MEMORY 사용량을 저장하는 함수
+def background_thread():
+    while True:
+        CPU = psutil.cpu_percent(interval=1)
+        MEMORY = psutil.virtual_memory().percent
+        print("CPU : ", CPU, ",    MEMORY : ", MEMORY)
+        # database update
+        db.child("CloudLearning").child("Monitoring").update(
+            {"CPU": psutil.cpu_percent(interval=1)})
+        db.child("CloudLearning").child("Monitoring").update(
+            {"MEMORY": psutil.virtual_memory().percent})
+        time.sleep(2)
+
+
 @app.route("/", methods=['GET', 'POST'])
 def index():
+    # firebase 에 CPU, MEMORY 사용량을 저장
+    global thread
+    if thread is None:
+        thread = threading.Thread(target=background_thread)
+        thread.daemon = True
+        thread.start()
+
     if 'result' in session:
         result = '%s' % escape(session['result'])
         trainingscore = '%s' % escape(session['trainingscore'])
@@ -45,6 +87,7 @@ def index():
 @app.route("/training", methods=['POST'])
 def training_model():
     if request.method == 'POST':
+
         new_file = request.files['csv']  # 요청 파라미터 에서 csv파일 구함
         print("파일이름 : ", new_file.filename, "\n")  # 파일 확인
         new_file.save("csv/"+secure_filename(new_file.filename))  # csv 파일 저장

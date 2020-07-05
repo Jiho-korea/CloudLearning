@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script
+      class="jsbin"
+      src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"
+    ></script>
+
+    <title>Firebase example</title>
+  </head>
+  <body>
+    <h1 id="CPU"></h1>
+    <h1 id="MEMORY"></h1>
+
+    <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+    <script>
+      var firebaseConfig = {
+        apiKey: "AIzaSyDU9epT6v6ByF1ETbO7Wb8bfnjl03jDzeQ",
+        authDomain: "cloudlearning-c6b5b.firebaseapp.com",
+        databaseURL: "https://cloudlearning-c6b5b.firebaseio.com",
+        projectId: "cloudlearning-c6b5b",
+        storageBucket: "cloudlearning-c6b5b.appspot.com",
+        messagingSenderId: "886108415440",
+        appId: "1:886108415440:web:c68e7a51da2ff23a97c5d5",
+        measurementId: "G-7CPKRDBZQ2",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      // insert 문
+      // firebase.database().ref("CloudLearning/Monitoring").set({
+      //   CPU: 4444,
+      //   MEMORY: 4444,
+      // });
+      var CPU = document.getElementById("CPU");
+      var MEMORY = document.getElementById("MEMORY");
+
+      var ref = firebase
+        .database()
+        .ref()
+        .child("CloudLearning")
+        .child("Monitoring");
+
+      ref
+        .child("CPU")
+        .on("value", (snap) => (CPU.innerText = "CPU : " + snap.val()));
+      ref
+        .child("MEMORY")
+        .on("value", (snap) => (MEMORY.innerText = "MEMORY : " + snap.val()));
+    </script>
+  </body>
+</html>

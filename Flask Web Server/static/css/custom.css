@@ -39,6 +39,8 @@
 
 .file-upload-input {
   position: absolute;
+  top: 0;
+  left: 0;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -121,6 +123,8 @@ div#container {
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  position: relative;
 }
 
 #submitButton {
@@ -286,4 +290,74 @@ div#testDiv {
 }
 #testButton:after {
   content: "TEST";
+}
+
+/* cpu 사용량 프로그레스 바 */
+.cpu-progress {
+  width: 100%;
+  height: 30px;
+}
+
+.cpu-progress-wrap {
+  background: #dd3e54;
+  margin: 10px 0;
+  overflow: hidden;
+  position: relative;
+  border-radius: 7px;
+}
+.cpu-progress-wrap .cpu-progress-bar {
+  background: #ddd;
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+/* memory 사용량 프로그레스 바 */
+.memory-progress {
+  width: 100%;
+  height: 30px;
+}
+
+.memory-progress-wrap {
+  background: #f4791f;
+  margin: 10px 0;
+  overflow: hidden;
+  position: relative;
+  border-radius: 7px;
+}
+.memory-progress-wrap .memory-progress-bar {
+  background: #ddd;
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+div#MonitoringContainer {
+  display: inline-block;
+  justify-content: left;
+
+  align-items: left;
+  flex-direction: column;
+  width: 50%;
+}
+
+div#cpuContainer {
+  position: relative;
+}
+div#cpuText {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+div#memoryContainer {
+  position: relative;
+}
+div#memoryText {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }

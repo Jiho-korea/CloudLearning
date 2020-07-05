@@ -139,3 +139,87 @@ $(".test-csv-upload-wrap").bind("dragover", function () {
 $(".test-csv-upload-wrap").bind("dragleave", function () {
   $(".test-csv-upload-wrap").removeClass("test-csv-dropping");
 });
+
+//  프로그레스 바
+
+// on page load...
+moveCPUProgressBar();
+moveMemoryProgressBar;
+// on browser resize...
+$(window).resize(function () {
+  moveCPUProgressBar();
+  moveMemoryProgressBar;
+});
+
+// CPU 사용량 SIGNATURE PROGRESS
+function moveCPUProgressBar(cpuPercentage) {
+  console.log("moveCPUProgressBar");
+  var getPercent = cpuPercentage / 100;
+  var getProgressWrapWidth = $(".cpu-progress-wrap").width();
+  var progressTotal = getPercent * getProgressWrapWidth;
+  var animationLength = 0;
+
+  // on page load, animate percentage bar to data percentage length
+  // .stop() used to prevent animation queueing
+  $(".cpu-progress-bar").stop().animate(
+    {
+      left: progressTotal,
+    },
+    animationLength
+  );
+}
+// 메모리 사용령 SIGNATURE PROGRESS
+function moveMemoryProgressBar(memoryPercentage) {
+  console.log("moveMEMORYProgressBar");
+  var getPercent = memoryPercentage / 100;
+  var getProgressWrapWidth = $(".memory-progress-wrap").width();
+  var progressTotal = getPercent * getProgressWrapWidth;
+  var animationLength = 0;
+
+  // on page load, animate percentage bar to data percentage length
+  // .stop() used to prevent animation queueing
+  $(".memory-progress-bar").stop().animate(
+    {
+      left: progressTotal,
+    },
+    animationLength
+  );
+}
+
+// firebase
+var firebaseConfig = {
+  apiKey: "AIzaSyDU9epT6v6ByF1ETbO7Wb8bfnjl03jDzeQ",
+  authDomain: "cloudlearning-c6b5b.firebaseapp.com",
+  databaseURL: "https://cloudlearning-c6b5b.firebaseio.com",
+  projectId: "cloudlearning-c6b5b",
+  storageBucket: "cloudlearning-c6b5b.appspot.com",
+  messagingSenderId: "886108415440",
+  appId: "1:886108415440:web:c68e7a51da2ff23a97c5d5",
+  measurementId: "G-7CPKRDBZQ2",
+};
+
+firebase.initializeApp(firebaseConfig);
+// insert 문
+// firebase.database().ref("CloudLearning/Monitoring").set({
+//   CPU: 4444,
+//   MEMORY: 4444,
+// });
+var CPU = document.getElementById("CPU");
+var MEMORY = document.getElementById("MEMORY");
+
+var ref = firebase.database().ref().child("CloudLearning").child("Monitoring");
+
+// ref.child("CPU").on("value", (snap) => (CPU.innerText = "CPU : " + snap.val()));
+// ref
+//   .child("MEMORY")
+//   .on("value", (snap) => (MEMORY.innerText = "MEMORY : " + snap.val()));
+ref.child("CPU").on("value", function (snapshat) {
+  var cpuPercentage = snapshat.val();
+  CPU.innerText = "CPU : " + cpuPercentage + "%";
+  moveCPUProgressBar(cpuPercentage);
+});
+ref.child("MEMORY").on("value", function (snapshat) {
+  var memoryPercentage = snapshat.val();
+  MEMORY.innerText = "MEMORY : " + memoryPercentage + "%";
+  moveMemoryProgressBar(memoryPercentage);
+});

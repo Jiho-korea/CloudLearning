@@ -1,16 +1,19 @@
-# -*-coding:utf-8 -*-
+import pyrebase
 
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
+config = {
+    "apiKey": "AIzaSyDU9epT6v6ByF1ETbO7Wb8bfnjl03jDzeQ",
+    "authDomain": "cloudlearning-c6b5b.firebaseapp.com",
+    "databaseURL": "https://cloudlearning-c6b5b.firebaseio.com",
+    "projectId": "cloudlearning-c6b5b",
+    "storageBucket": "cloudlearning-c6b5b.appspot.com",
+    "messagingSenderId": "886108415440",
+    "appId": "1:886108415440:web:c68e7a51da2ff23a97c5d5",
+    "measurementId": "G-7CPKRDBZQ2",
+}
 
-cred = credentials.Certificate(
-    "./CloudLearning.json")
-firebase_admin.initialize_app(cred)
-db = firestore.client()
+firebase = pyrebase.initialize_app(config)
 
-doc_ref = db.collection(u'CloudLearning').document(u'Monitoring')
-doc_ref.set({
-    u'CPU': 20,
-    u'Memory': 200
-})
+db = firebase.database()
+
+db.child("CloudLearning").child("Monitoring").update({"CPU": 9999})
+db.child("CloudLearning").child("Monitoring").update({"MEMORY": 9999})
