@@ -3,6 +3,14 @@ DeepLearning Model을 만들어주는 Cloud 서비스 입니다.
 
 사용자는 포털에서 csv파일만 클라우드로 업로드 하면 클라우드에서 모델 학습이 이뤄지고 사용자는 포털에서 학습된 모델을 다운로드하고 테스트할 수 있습니다.
 
+![CloudLearning기획서 (1)](https://user-images.githubusercontent.com/50912180/129495968-08c64406-1928-42bd-b027-b9ca86f684c0.jpg)
+![CloudLearning기획서 (2)](https://user-images.githubusercontent.com/50912180/129495969-c43db5f1-73e4-4a8d-8965-9ca3dac81be0.jpg)
+![CloudLearning기획서 (3)](https://user-images.githubusercontent.com/50912180/129495970-31ea8065-f1a6-4b7b-bcca-10be23b967a0.jpg)
+![CloudLearning기획서 (4)](https://user-images.githubusercontent.com/50912180/129495971-eafe6c67-aeee-447a-9d7d-e6143beada77.jpg)
+![CloudLearning기획서 (5)](https://user-images.githubusercontent.com/50912180/129495972-6c79998b-4901-4fed-a04a-c9c75dd9f9bb.jpg)
+![CloudLearning기획서 (6)](https://user-images.githubusercontent.com/50912180/129495966-e8121153-bba3-440b-b6ad-cbe360957419.jpg)
+![CloudLearning기획서 (7)](https://user-images.githubusercontent.com/50912180/129495967-80985d14-cb9d-4bfb-8ca2-08eca0f70c18.jpg)
+
 
 메인 화면 (csv 파일 업로드 가능)
 
